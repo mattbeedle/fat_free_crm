@@ -76,7 +76,7 @@ class Lead < ActiveRecord::Base
 
   def comments_attributes=( attribs )
     attribs.each do |a|
-      self.comments.build a
+      self.comments.build a.merge(:commentable => self)
     end
   end
 
