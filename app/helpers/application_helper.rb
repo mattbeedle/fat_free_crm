@@ -54,14 +54,35 @@ module ApplicationHelper
   end
 
   #----------------------------------------------------------------------------
-  def inline(id, url, options = {})
-    content_tag("div", link_to_inline(id, url, options), :class => options[:class] || "title_tools")
+  def section(related, assets)
+    asset = assets.to_s.singularize
+    create_id  = :"create_#{asset}"
+    select_id  = :"select_#{asset}"
+    create_url = controller.send(:"new_#{asset}_path")
+
+    html = "<br />"
+    html << content_tag(:div, link_to(t(select_id), "#", :id => select_id), :class => "subtitle_tools")
+    html << content_tag(:div, "&nbsp;|&nbsp;", :class => "subtitle_tools")
+    html << content_tag(:div, link_to_inline(create_id, create_url, :related => dom_id(related), :text=> t(create_id)), :class => "subtitle_tools")
+    html << content_tag(:div, t(assets), :class => :subtitle, :id => :"create_#{asset}_title")
+    html << content_tag(:div, "", :class => :remote, :id => create_id, :style => "display:none;")
+  end
+
+  #----------------------------------------------------------------------------
+  def load_select_popups_for(related, *assets)
+    js = assets.inject("") do |str, asset|
+      str << render(:partial => "common/select_popup", :locals => { :related => related, :popup => asset })
+    end
+
+    content_for(:javascript_epilogue) do
+      "document.observe('dom:loaded', function() { #{js} });"
+    end
   end
 
   #----------------------------------------------------------------------------
   def link_to_inline(id, url, options = {})
     text = options[:text] || id.to_s.titleize
-    text = (arrow_for(id) << "&nbsp;" << text) unless options[:plain]
+    text = (arrow_for(id) + text) unless options[:plain]
     related = (options[:related] ? ", related: '#{options[:related]}'" : "")
 
     link_to_remote(text,
@@ -73,12 +94,12 @@ module ApplicationHelper
 
   #----------------------------------------------------------------------------
   def arrow_for(id)
-    content_tag(:abbr, "&#9658;", :id => "#{id}_arrow")
+    content_tag(:span, "&#9658;", :id => "#{id}_arrow", :class => :arrow)
   end
 
   #----------------------------------------------------------------------------
   def link_to_edit(model)
-    name = model.class.name.downcase
+    name = model.class.name.underscore.downcase
     link_to_remote(t(:edit),
       :method => :get,
       :url    => send("edit_#{name}_path", model),
@@ -88,10 +109,24 @@ module ApplicationHelper
 
   #----------------------------------------------------------------------------
   def link_to_delete(model)
-    name = model.class.name.downcase
+    name = model.class.name.underscore.downcase
     link_to_remote(t(:delete) + "!",
       :method => :delete,
       :url    => send("#{name}_path", model),
+      :before => visual_effect(:highlight, dom_id(model), :startcolor => "#ffe4e1")
+    )
+  end
+
+  #----------------------------------------------------------------------------
+  def link_to_discard(model)
+    name = model.class.name.downcase
+    current_url = (request.xhr? ? request.referer : request.request_uri)
+    parent, parent_id = current_url.scan(%r|/(\w+)/(\d+)|).flatten
+
+    link_to_remote(t(:discard),
+      :method => :post,
+      :url    => url_for(:controller => parent, :action => :discard, :id => parent_id),
+      :with   => "{ attachment: '#{model.class.name}', attachment_id: #{model.id} }",
       :before => visual_effect(:highlight, dom_id(model), :startcolor => "#ffe4e1")
     )
   end
@@ -111,10 +146,24 @@ module ApplicationHelper
     )
   end
 
+  # Bcc: to dropbox address if the dropbox has been set up.
+  #----------------------------------------------------------------------------
+  def link_to_email(email, length = nil)
+    name = (length ? truncate(email, :length => length) : email)
+    if Setting.email_dropbox && Setting.email_dropbox[:address].present?
+      mailto = "#{email}?bcc=#{Setting.email_dropbox[:address]}"
+    else
+      mailto = email
+    end
+    link_to(h(name), "mailto:#{mailto}", :title => email)
+  end
+
   #----------------------------------------------------------------------------
   def jumpbox(current)
-    [ :campaigns, :accounts, :leads, :contacts, :opportunities ].inject([]) do |html, controller|
-      html << link_to_function(controller.to_s.capitalize, "crm.jumper('#{controller}')", :class => (controller == current ? "selected" : ""))
+    tabs = [ :campaigns, :accounts, :leads, :contacts, :opportunities ]
+    current = tabs.first unless tabs.include?(current)
+    tabs.inject([]) do |html, tab|
+      html << link_to_function(t("tab_#{tab}"), "crm.jumper('#{tab}')", :class => (tab == current ? 'selected' : ''))
     end.join(" | ")
   end
 
@@ -238,8 +287,12 @@ module ApplicationHelper
   end
 
   #----------------------------------------------------------------------------
-  def activate_facebox
-    %Q/document.observe("dom:loaded", function() { new Facebox('#{Setting.base_url}'); });/
+  def localize_calendar_date_select
+    update_page_tag do |page|
+      page.assign '_translations', { 'OK' => t('calendar_date_select.ok'), 'Now' => t('calendar_date_select.now'), 'Today' => t('calendar_date_select.today'), 'Clear' => t('calendar_date_select.clear') }
+      page.assign 'Date.weekdays', t('date.abbr_day_names')
+      page.assign 'Date.months', t('date.month_names')[1..-1]
+    end
   end
 
   # Users can upload their avatar, and if it's missing we're going to use
@@ -269,12 +322,56 @@ module ApplicationHelper
     "#{request.protocol + request.host_with_port}" + Setting.base_url.to_s + "/images/avatar.jpg"
   end
 
-  # Returns true if partial template exists. Note that the file name of the
-  # partial starts with underscore.
+  # Returns default permissions intro.
   #----------------------------------------------------------------------------
-  def partial_exist?(partial, extension = '.html.haml')
-    filename = partial.sub(%r{/([^/]*)$}, '/_\\1') + extension
-    FileTest.exist?(File.join(RAILS_ROOT, 'app', 'views', filename))
+  def get_default_permissions_intro(access, text)
+    case access
+      when "Private" then t(:permissions_intro_private, text)
+      when "Public"  then t(:permissions_intro_public,  text)
+      when "Shared"  then t(:permissions_intro_shared,  text)
+    end
+  end
+  
+  # Returns default permissions intro
+  #----------------------------------------------------------------------------
+  def get_default_permissions_intro(access, text)
+    case access
+      when "Private" then t(:permissions_intro_private, text)
+      when "Public" then t(:permissions_intro_public, text)
+      when "Shared" then t(:permissions_intro_shared, text)
+    end
+  end  
+
+  # Render a text field that is part of compound address.
+  #----------------------------------------------------------------------------
+  def address_field(form, object, attribute, extra_styles)
+    hint = "#{t(attribute)}..."
+    if object.send(attribute).blank?
+      object.send("#{attribute}=", hint)
+      form.text_field(attribute,
+        :hint    => true,
+        :style   => "margin-top: 6px; color:silver; #{extra_styles}",
+        :onfocus => "crm.hide_hint(this)",
+        :onblur  => "crm.show_hint(this, '#{hint}')"
+      )
+    else
+      form.text_field(attribute,
+        :hint    => false,
+        :style   => "margin-top: 6px; #{extra_styles}",
+        :onfocus => "crm.hide_hint(this, '#{escape_javascript(object.send(attribute))}')",
+        :onblur  => "crm.show_hint(this, '#{hint}')"
+      )
+    end
+  end
+
+  # Return true if:
+  #   - it's an Ajax request made from the asset landing page (i.e. create opportunity
+  #     from a contact landing page) OR
+  #   - we're actually showing asset landing page.
+  #----------------------------------------------------------------------------
+  def shown_on_landing_page?
+    !!((request.xhr? && request.referer =~ %r|/\w+/\d+|) ||
+       (!request.xhr? && request.request_uri =~ %r|/\w+/\d+|))
   end
 
 end

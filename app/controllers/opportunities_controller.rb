@@ -20,6 +20,8 @@ class OpportunitiesController < ApplicationController
   before_filter :set_current_tab, :only => [ :index, :show ]
   before_filter :load_settings
   before_filter :get_data_for_sidebar, :only => :index
+  before_filter :attach, :only => :attach
+  before_filter :discard, :only => :discard
   before_filter :auto_complete, :only => :auto_complete
   after_filter  :update_recently_viewed, :only => :show
 
@@ -43,6 +45,8 @@ class OpportunitiesController < ApplicationController
     @opportunity = Opportunity.my(@current_user).find(params[:id])
     @comment = Comment.new
 
+    @timeline = Timeline.find(@opportunity)
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @opportunity }
@@ -56,7 +60,7 @@ class OpportunitiesController < ApplicationController
   # GET /opportunities/new.xml                                             AJAX
   #----------------------------------------------------------------------------
   def new
-    @opportunity = Opportunity.new(:user => @current_user, :stage => "prospecting")
+    @opportunity = Opportunity.new(:user => @current_user, :stage => "prospecting", :access => Setting.default_access)
     @users       = User.except(@current_user).all
     @account     = Account.new(:user => @current_user)
     @accounts    = Account.my(@current_user).all(:order => "name")
@@ -175,6 +179,20 @@ class OpportunitiesController < ApplicationController
     respond_to_not_found(:html, :js, :xml)
   end
 
+  # PUT /opportunities/1/attach
+  # PUT /opportunities/1/attach.xml                                        AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :attach, :only => :attach
+
+  # POST /opportunities/1/discard
+  # POST /opportunities/1/discard.xml                                      AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :discard, :only => :discard
+
+  # POST /opportunities/auto_complete/query                                AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :auto_complete, :only => :auto_complete
+
   # GET /campaigns/search/query                                           AJAX
   #----------------------------------------------------------------------------
   def search
@@ -186,14 +204,10 @@ class OpportunitiesController < ApplicationController
     end
   end
 
-  # POST /opportunities/auto_complete/query                                AJAX
-  #----------------------------------------------------------------------------
-  # Handled by before_filter :auto_complete, :only => :auto_complete
-
   # GET /opportunities/options                                             AJAX
   #----------------------------------------------------------------------------
   def options
-    unless params[:cancel] == "true"
+    unless params[:cancel].true?
       @per_page = @current_user.pref[:opportunities_per_page] || Opportunity.per_page
       @outline  = @current_user.pref[:opportunities_outline]  || Opportunity.outline
       @sort_by  = @current_user.pref[:opportunities_sort_by]  || Opportunity.sort_by

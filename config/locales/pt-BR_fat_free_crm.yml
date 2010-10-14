@@ -53,7 +53,7 @@ pt-BR:
   proposal: Proposta
   negotiation: Negociação
   final_review: Revisão final
-  won: Fechado/Consuistado
+  won: Fechado/Conquistado
   lost: Fechado/Perdido
 
   call: Ligação
@@ -72,6 +72,7 @@ pt-BR:
   due_this_week: Esta semana
   due_next_week: Próxima semana
   due_later: Depois
+  due_specific_date: Em Data Específica... # ?!
 
   completed_today: Hoje
   completed_yesterday: Ontem
@@ -185,6 +186,7 @@ pt-BR:
   #----------------------------------------------------------------------------
   "option_amount*probability": weighted amount
   activity_options: Exibir atividades em {{models}} feitas por {{user}} no(s) último(s) {{period}}.
+  all_users: todos os usuários
   option_after: depois
   option_all: todos
   option_all_users: todos os usuários
@@ -324,7 +326,6 @@ pt-BR:
     
   # Views -> Contacts.
   #----------------------------------------------------------------------------
-  address: Endereço
   alt_email_small: Outro
   blog: Website/Blog
   contact: Contato
@@ -341,7 +342,11 @@ pt-BR:
   facebook: Facebook
   linked_in: LinkedIn
   myself: Eu
-  permissions_intro: Por padrão somente você terá acesso a {{value}}. Você pode mudar as permissões depois.
+
+  permissions_intro_private: Por padrão, somente você terá acesso em {{value}}. Você pode mudar as permissões depois.
+  permissions_intro_public: Por padrão, todos os usuários terão acesso em {{value}}. Você pode mudar as permissões depois..
+  permissions_intro_shared: Por padrão, somente os usuários selecionados terão acesso em {{value}}. Você pode mudar as permissões depois..
+
   referred_by: Referred by
   referred_by_small: referred by
   save_contact: Salvar contato
@@ -352,29 +357,33 @@ pt-BR:
 
   # Views -> Leads.
   #----------------------------------------------------------------------------
-  leads: Leads
-  lead: Lead
-  lead_small: lead
-  leads_small: leads
-  create_lead: Novo lead
-  save_lead: Salvar lead
-  leads_options: Opções de Lead
   convert: Converter
-  reject: Rejeitar
-  status: Situação
-  source: Origem
-  rating: Rating
-  lead_info_small: contato do lead
-  lead_status_small: situação do lead
-  lead_permissions_intro: Por padrão, as permissões serão copiadas da campanha ou serão privadas. Você pode mudar as permissões do lead depois.
-  create_opp_for_contact: Você pode opcionalmente criar uma oportunidade para o contato {{value}}  especificando o nome, fase atual, data estimada de fechamento, probabilidade de venda, valor do acordo, e o desconto oferecido.
   convert_lead: Converter lead
-  convert_lead_text: By converting the lead {{value}} will become a contact associated with the existing or newly created account. Lead status will be automatically set to converted.
   convert_lead_permissions_intro: Contact permissions will be copied from the lead being converted. You can change contact permissions later.
-  total_leads: Total de leads
+  convert_lead_text: By converting the lead {{value}} will become a contact associated with the existing or newly created account. Lead status will be automatically set to converted.
+  create_lead: Novo lead
+  create_opp_for_contact: Você pode opcionalmente criar uma oportunidade para o contato {{value}}  especificando o nome, fase atual, data estimada de fechamento, probabilidade de venda, valor do acordo, e o desconto oferecido.
+  lead: Lead
+  lead_info_small: contato do lead
+
+  lead_permissions_intro_private: Por padrão, as permissões seráo copiadas da campanha ou ficarão privadas. Você pode mudar as permissões do 'lead' depois.
+  lead_permissions_intro_public: Por padrão, as permissões sérão copiadas do campanha ou ficarão públicas. Você pode mudar as permissões do 'lead' depois.
+  lead_permissions_intro_shared: Por padrão, as permissões serão compiadas da campanha ou serão compartilhadas com os usuários especificados. Você pode mudar as permissões do 'lead' depois.
+
+  lead_small: lead
+  lead_status_small: situação do lead
   lead_summary: Lead Summary
-  reject_lead_confirm: Tem certeza que deseja rejeitar este lead?
+  leads: Leads
+  leads_options: Opções de Lead
+  leads_small: leads
   none: Nenhum
+  rating: Rating
+  reject: Rejeitar
+  reject_lead_confirm: Tem certeza que deseja rejeitar este lead?
+  save_lead: Salvar lead
+  source: Origem
+  status: Situação
+  total_leads: Total de leads
 
   # Views -> Opportunities.
   #----------------------------------------------------------------------------
@@ -422,6 +431,9 @@ pt-BR:
   feel_free: Sinta-se livre para
   move_to: mover para
   no_tasks: "Você não tem nenhum atividade {{value}}"
+  no_tasks_pending: pendente
+  no_tasks_assigned: atribuída
+  no_tasks_completed: terminada
   pending_tab: Pendente
   pending_tasks: Tarefas pendentes
   related: 're:'
@@ -447,11 +459,12 @@ pt-BR:
  
   # Views -> Home.
   #----------------------------------------------------------------------------
-  action_commented: commented on
+  action_commented: comentada em
   action_completed: terminado
   action_created: criado
   action_deleted: removido
-  action_reassigned: reassigned
+  action_email: trocar e-mails com
+  action_reassigned: reatribuída
   action_rejected: rejeitado
   action_rescheduled: reagendado
   action_updated: atualziado
@@ -484,9 +497,12 @@ pt-BR:
   create_new: cria um(a) novo(a)
   select_existing: selecione existentes
   delete: Remover
+  discard: Discard # TODO
   edit: Editar
   items_total: '{{count}} total.'
+  less: Menos...
   me: mim
+  more: Mais...
   n_a: N/A
   name: Nome
   no_match: 'No {{value}} match'
@@ -497,12 +513,19 @@ pt-BR:
   recent_items: Itens recentes
   search_assets: Buscar {{value}}
   time_ago: "há {{value}} atrás"
+  background_info: Informações gerais
+  address: Endereço
+  city: Ciudade
+  zipcode: CEP
+  state: Membro/Região
+  country: Campo
 
   # Views -> Layout.
   #----------------------------------------------------------------------------
   about: Sobre
   about_dev_group: Grupo de discussão para desenvolvedores
   about_features: Funcionalidades e bugs
+  about_ffc: Sobre Fat Free CRM
   about_ffc_resources: Recursos do Fat Free CRM (link abre em uma nova janela)
   about_ffc_version: Fat Free CRM versão
   about_home_page: Home page
@@ -528,6 +551,11 @@ pt-BR:
   reset_password: Redefnir senha
   update_password_and_login: Atualizar senha e entrar.
 
+  # Views -> Admin
+  #----------------------------------------------------------------------------
+  back_to_crm: Voltar ao Fat Free CRM
+  crm_admin_page: Administração do Fat Free CRM
+
   # Views -> Admin -> Users.
   #----------------------------------------------------------------------------
   approve: Aprovar
@@ -551,6 +579,16 @@ pt-BR:
   users: Usuários
   users_small: usuários
 
+  # Dropbox.
+  #----------------------------------------------------------------------------
+  dropbox_ack_subject: dropbox - E-mail Added - {{subject}}
+  dropbox_ack_intro: Adicionado com sucesso o e-mail que você enviou para dropbox
+  dropbox_ack_to: Adicionado a
+  subject: Assunto
+  body: Corpo
+
+  # Pluralizations.
+  #----------------------------------------------------------------------------
   pluralize:
     contact: 
       one: '1 contato'
@@ -567,3 +605,21 @@ pt-BR:
     login:
       one: '1 login'
       other: '{{count}} logins'
+
+  # Custom date/time formats.
+  #----------------------------------------------------------------------------
+  date:
+    formats:
+      mmddyyyy: "%m/%d/%Y"
+      mmdd: "%b %e"
+      mmddyy: "%b %e, %Y"
+
+  time:
+    formats:
+      mmddhhss: "%b %e at %l:%M%p"
+
+  calendar_date_select:
+    ok: OK
+    now: Agora
+    today: Hoje
+    clear: Limpar

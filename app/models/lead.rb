@@ -16,36 +16,36 @@
 #------------------------------------------------------------------------------
 
 # == Schema Information
-# Schema version: 23
+# Schema version: 27
 #
 # Table name: leads
 #
-#  id          :integer(4)      not null, primary key
-#  user_id     :integer(4)
-#  campaign_id :integer(4)
-#  assigned_to :integer(4)
-#  first_name  :string(64)      default(""), not null
-#  last_name   :string(64)      default(""), not null
-#  access      :string(8)       default("Private")
-#  title       :string(64)
-#  company     :string(64)
-#  source      :string(32)
-#  status      :string(32)
-#  referred_by :string(64)
-#  email       :string(64)
-#  alt_email   :string(64)
-#  phone       :string(32)
-#  mobile      :string(32)
-#  blog        :string(128)
-#  linkedin    :string(128)
-#  facebook    :string(128)
-#  twitter     :string(128)
-#  address     :string(255)
-#  rating      :integer(4)      default(0), not null
-#  do_not_call :boolean(1)      not null
-#  deleted_at  :datetime
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id              :integer(4)      not null, primary key
+#  user_id         :integer(4)
+#  campaign_id     :integer(4)
+#  assigned_to     :integer(4)
+#  first_name      :string(64)      default(""), not null
+#  last_name       :string(64)      default(""), not null
+#  access          :string(8)       default("Private")
+#  title           :string(64)
+#  company         :string(64)
+#  source          :string(32)
+#  status          :string(32)
+#  referred_by     :string(64)
+#  email           :string(64)
+#  alt_email       :string(64)
+#  phone           :string(32)
+#  mobile          :string(32)
+#  blog            :string(128)
+#  linkedin        :string(128)
+#  facebook        :string(128)
+#  twitter         :string(128)
+#  rating          :integer(4)      default(0), not null
+#  do_not_call     :boolean(1)      not null
+#  deleted_at      :datetime
+#  created_at      :datetime
+#  updated_at      :datetime
+#  background_info :string(255)
 #
 class Lead < ActiveRecord::Base
   belongs_to  :user
@@ -54,14 +54,20 @@ class Lead < ActiveRecord::Base
   has_one     :contact, :dependent => :nullify # On destroy keep the contact, but nullify its lead_id
   has_many    :tasks, :as => :asset, :dependent => :destroy, :order => 'created_at DESC'
   has_many    :activities, :as => :subject, :order => 'created_at DESC'
-
+  has_one     :business_address, :dependent => :destroy, :as => :addressable, :class_name => "Address", :conditions => "address_type='Business'"
+  has_many    :emails, :as => :mediator
+  
+  accepts_nested_attributes_for :business_address, :allow_destroy => true
+  
   named_scope :only, lambda { |filters| { :conditions => [ "status IN (?)" + (filters.delete("other") ? " OR status IS NULL" : ""), filters ] } }
   named_scope :converted, :conditions => "status='converted'"
   named_scope :for_campaign, lambda { |id| { :conditions => [ "campaign_id=?", id ] } }
   named_scope :created_by, lambda { |user| { :conditions => [ "user_id = ?" , user.id ] } }
   named_scope :assigned_to, lambda { |user| { :conditions => ["assigned_to = ? " , user.id ] } }
 
-  simple_column_search :first_name, :last_name, :company, :escape => lambda { |query| query.gsub(/[^\w\s\-\.']/, "").strip }
+  simple_column_search :first_name, :last_name, :company, :email,
+    :match => lambda { |column| column == :email ? :middle : :start },
+    :escape => lambda { |query| query.gsub(/[^\w\s\-\.']/, "").strip }
   uses_user_permissions
   acts_as_commentable
   acts_as_paranoid
@@ -129,6 +135,20 @@ class Lead < ActiveRecord::Base
   #----------------------------------------------------------------------------
   def reject
     update_attribute(:status, "rejected")
+  end
+
+  # Attach a task to the lead if it hasn't been attached already.
+  #----------------------------------------------------------------------------
+  def attach!(task)
+    unless self.task_ids.include?(task.id)
+      self.tasks << task
+    end
+  end
+
+  # Discard a task from the lead.
+  #----------------------------------------------------------------------------
+  def discard!(task)
+    task.update_attribute(:asset, nil)
   end
 
   #----------------------------------------------------------------------------

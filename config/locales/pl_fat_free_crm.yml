@@ -3,7 +3,7 @@ pl:
 
   # Generic terms.
   #----------------------------------------------------------------------------
-  all: Wszystko # not used?
+  all: Wszystko
   at: /
   here: tutaj
   no_button: 'Nie'
@@ -72,8 +72,9 @@ pl:
   due_today: Dziś
   due_tomorrow: Jutro
   due_this_week: W tym tygodniu
-  due_next_week: w nast. tygodniu
+  due_next_week: W nast. tygodniu
   due_later: Później
+  due_specific_date: Na dany dzień...
 
   completed_today: Dziś
   completed_yesterday: Wczoraj
@@ -83,12 +84,12 @@ pl:
 
   # Models/Activity.
   #----------------------------------------------------------------------------
-  one_hour: godzinę
-  one_day: dzień
-  two_days: dwa dni
-  one_week: tydzień
-  two_weeks: dwa tygodnie
-  one_month: miesiąc
+  one_hour: ostatnią godzinę
+  one_day: ostatni dzień
+  two_days: ostatnie dwa dni
+  one_week: ostatni tydzień
+  two_weeks: ostatnie dwa tygodnie
+  one_month: ostatni miesiąc
 
   # Model Validations.
   #----------------------------------------------------------------------------
@@ -172,21 +173,22 @@ pl:
   msg_goodbye: Zostałeś wylogowany. Dziękujemy za używanie Fat Free CRM!
   msg_invalid_password: "^Proszę prawidłowo podać aktualne hasło"
   msg_invalig_login: Nieprawidłowy użytkownik lub hasło.
-  msg_last_login: "Ostatnio zalogowany: {{value}}."
+  msg_last_login: "Ostatnio zalogowany {{value}}."
   msg_login_needed: Musisz być zalogowany, by mieć dostęp do tej strony.
   msg_logout_needed: Musisz być wylogowany, by mieć dostęp do tej strony.
   msg_password_changed: Twoje hasło zostało zmienione.
   msg_password_not_changed: Twoje hasło pozostało niezmienione.
   msg_password_updated: Hasło zostało zaktualizowane.
   msg_pwd_instructions_sent: Instrukcja, jak odzyskać hasło zostały wysłane. Sprawdź Twoją skrzynkę emailową.
-  msg_require_admin: You must be Administrator to access this page.
+  msg_require_admin: Musisz być Administratorem, by otworzyć tę stronę.
   msg_successful_signup: Rejestracja udana, witaj w Fat Free CRM!
   msg_welcome: Witaj w Fat Free CRM!
 
   # Options.
   #----------------------------------------------------------------------------
   "option_amount*probability": kwoty ważonej
-  activity_options: Pokaż {{models}} zmieniane przez {{user}} przez ostatnie {{period}}.
+  activity_options: Pokaż {{models}} zmieniane przez {{user}} przez {{period}}.
+  all_users: wszystkich
   option_after: po nazwisku
   option_all: wszystko
   option_all_users: wszystkich
@@ -252,7 +254,7 @@ pl:
 
   # Views -> Authenticate.
   #----------------------------------------------------------------------------
-  forgot_password: Zapomniałeś hasło
+  forgot_password: Zapomniałem hasła
   login: Zaloguj
   no_account: Czy posiadasz konto?
   remember_me: Pamiętaj mnie na tym komputerze
@@ -326,7 +328,6 @@ pl:
     
   # Views -> Contacts.
   #----------------------------------------------------------------------------
-  address: Adres
   alt_email_small: Inny
   blog: Website/Blog
   contact: Kontakt
@@ -343,7 +344,11 @@ pl:
   facebook: Facebook
   linked_in: LinkedIn
   myself: mnie
-  permissions_intro: Domyślnie tylko Ty będziesz miał dostęp do {{value}}. Można to poźniej zmienić.
+
+  permissions_intro_private: Domyślnie tylko Ty będziesz miał dostęp do {{value}}. Można to poźniej zmienić.
+  permissions_intro_public: Domyślnie wszyscy użytkownicy będą mieli dostęp do {{value}}. Można to poźniej zmienić.
+  permissions_intro_shared: Domyślnie tylko wybrani użytkownicy będą mieli dostęp do {{value}}. Można to poźniej zmienić.
+
   referred_by: Polecony przez
   referred_by_small: polecony przez
   save_contact: Zapisz kontakt
@@ -362,7 +367,11 @@ pl:
   create_opp_for_contact: Opcjonalnie możesz dodać szansę do {{value}} podając nazwę, aktualną fazę, zakładaną datę zamknięcia, prawdopodobieństwo sprzedaży, kwotę sprzedaży i oferowany rabat.
   lead: Lead
   lead_info_small: lead
-  lead_permissions_intro: Domyślnie prawa dostępu zostaną skopiowane z kampanii albo ustawione na Prywatny. Możesz zmienić to później.
+
+  lead_permissions_intro_private: Domyślnie prawa dostępu zostaną skopiowane z kampanii albo tylko Ty będziesz miał dostęp. Możesz zmienić to później.
+  lead_permissions_intro_public: Domyślnie prawa dostępu zostaną skopiowane z kampanii albo wszyscy użytkownicy będą mieli dostęp. Możesz zmienić to później.
+  lead_permissions_intro_shared: Domyślnie prawa dostępu zostaną skopiowane z kampanii albo tylko wybrani użytkownicy będą mieli dostęp. Możesz zmienić to później.
+
   lead_small: lead
   lead_status_small: status leada
   lead_summary: Lead
@@ -419,11 +428,14 @@ pl:
   completed_tab: Zakończone
   completed_tasks: Zakończone zadania
   create_task: Dodaj zadanie
-  create_task_small: dodaj nowe zadanie
+  create_task_small: dodać nowe zadanie
   due: Termin
   feel_free: Możesz
   move_to: przesuń na
-  no_tasks: "NIe masz żadnych zadań na {{value}}"
+  no_tasks: "Nie masz żadnych {{value}} zadań"
+  no_tasks_pending: otwartych
+  no_tasks_assigned: przypisanych
+  no_tasks_completed: zakończonych
   pending_tab: Otwarte
   pending_tasks: otwarte zadania
   related: 'pow.:'
@@ -453,12 +465,13 @@ pl:
   action_completed: ukończył/a
   action_created: utworzył/a
   action_deleted: usunięto
+  action_email: wymienił/a emaile
   action_reassigned: zmienił/a przypisanie
   action_rejected: oznaczył/a jako Stracony
   action_rescheduled: zmienił/a termin
   action_updated: zmienił/a
   action_viewed: oglądał/a
-  action_won: wygral/a
+  action_won: wygrał/a
   no_activity_records: Brak czynności dla tych ustawień.
   recent_activity: Ostatnie czynności
   recent_activity_options: Opcje ostatnich czynności
@@ -486,12 +499,15 @@ pl:
   create_new: dodaj nowego
   select_existing: wybierz istniejącego
   delete: Usuń
+  discard: Anuluj
   edit: Zmień
   items_total: '{{count}} razem.'
+  less: Mniej...
   me: mnie
+  more: Więcej...
   n_a: N/A
   name: Nazwa
-  no_match: NIe znaleziono {{value}}
+  no_match: Nie znaleziono {{value}}
   no_recent_items: Nie ma nic do wyświetlenia.
   options: Opcje
   permissions: Dostęp
@@ -499,12 +515,19 @@ pl:
   recent_items: Ostatnio oglądane
   search_assets: Przeszukaj {{value}}
   time_ago: "{{value}} temu"
-
+  background_info: Informacje ogólne
+  address: Adres
+  city: Miasto
+  zipcode: Kod pocztowy
+  state: stan
+  country: kraj
+    
   # Views -> Layout.
   #----------------------------------------------------------------------------
   about: O produkcie
   about_dev_group: Forum dla programistów (pomóż ulepszać FFCRM!)
   about_features: Zgłaszanie życzeń i błędów
+  about_ffc: O produkcie Fat Free CRM
   about_ffc_resources: Zasoby Fat Free CRM (otwiera się w nowym oknie)
   about_ffc_version: Fat Free CRM wersja
   about_home_page: Strona główna
@@ -526,9 +549,15 @@ pl:
   # Views -> Passwords.
   #----------------------------------------------------------------------------
   confirm_password_intro: Wpisz swoje hasło i potwierdź je w drugim polu.
-  password_intro: Proszę podaj swój ade=res email, a instrukje dotyczące odzyskania konta zostaną tam wysłane.
+  password_intro: Proszę podaj swój adres email, a instrukje dotyczące odzyskania konta zostaną tam wysłane.
   reset_password: Odzyskaj hasło
   update_password_and_login: Zmień hasło i/lub nazwę użytkownika
+
+  # Views -> Admin
+  #----------------------------------------------------------------------------
+  # TODO
+  back_to_crm: Back to Fat Free CRM
+  crm_admin_page: Fat Free CRM Administration
 
   # Views -> Admin -> Users.
   #----------------------------------------------------------------------------
@@ -553,6 +582,16 @@ pl:
   users: Użytkownicy
   users_small: użytkowników
 
+  # Dropbox.
+  #----------------------------------------------------------------------------
+  dropbox_ack_subject: dropbox - E-mail Dodano - {{subject}}
+  dropbox_ack_intro: Pomyślnie dodane e-mail wysłanych do DropBox
+  dropbox_ack_to: Dodano do
+  subject: Temat
+  body: Ciało
+
+  # Pluralizations.
+  #----------------------------------------------------------------------------
   pluralize:
     contact: 
       one: '1 kontakt'
@@ -573,3 +612,21 @@ pl:
       one: '1 logowanie'
       few: '{{count}} logowania'
       other: '{{count}} logowań'
+
+  # Custom date/time formats.
+  #----------------------------------------------------------------------------
+  date:
+    formats:
+      mmddyyyy: "%d.%m.%Y"
+      mmdd: "%e %b"
+      mmddyy: "%e %b %Y"
+
+  time:
+    formats:
+      mmddhhss: "%e %b o %H:%M"
+
+  calendar_date_select:
+    ok: OK
+    now: Teraz
+    today: Dziś
+    clear: Wyczyść

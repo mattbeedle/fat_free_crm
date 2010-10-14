@@ -39,6 +39,8 @@
   .check_box input {
     position: relative;
     top: -3px; }
+  .check_box label {
+    font-size: 11px; }
 
 .tabless {
   margin: auto;
@@ -88,6 +90,8 @@
   font-size: 10px;
   float: right;
   padding: 0px 0px 0px 4px; }
+  .tools#comment_new_tools {
+    margin: 8px 0px 0px 0px; }
 
 .label {
   color: #3f3f3f;
@@ -197,10 +201,13 @@
 
 .comment {
   background: #f2f2f2;
+  border-bottom: 1px gainsboro solid;
   margin: 2px 0px 0px 0px;
   overflow: hidden;
   padding: 4px;
   list-style: none; }
+  .comment#comment_new {
+    margin: 3px 0px 0px 0px; }
   .comment input[type=text] {
     border: 1px #cfcfcf solid;
     color: grey;
@@ -226,6 +233,35 @@
   .comment dt {
     padding: 0px;
     margin: -10px 0px 0px 36px; }
+    .comment dt p {
+      margin: 10px 0px 0px 0px; }
+
+.mail {
+  background: #f2f2f2;
+  border-bottom: 1px gainsboro solid;
+  margin: 2px 0px 0px 0px;
+  overflow: hidden;
+  padding: 4px;
+  list-style: none; }
+  .mail .gravatar {
+    float: left;
+    margin: 3px 10px 3px 3px; }
+  .mail .subject {
+    color: black; }
+  .mail .body {
+    display: inline;
+    font-size: 11px; }
+  .mail tt {
+    font-size: 10px;
+    color: #666666; }
+  .mail dt {
+    padding: 0px;
+    margin: -10px 0px 0px 36px; }
+    .mail dt p {
+      margin: 10px 0px 0px 0px; }
+
+.toggle {
+  font-weight: normal; }
 
 #paginate {
   float: right;
@@ -345,6 +381,8 @@
   background: floralwhite; }
 .panel#summary {
   background: oldlace; }
+  .panel#summary p {
+    margin: 4px 0px 4px 0px; }
 
 .selector {
   color: black;
@@ -359,6 +397,10 @@
 .off {
   background: lightgrey;
   border: 1px silver outset; }
+
+.arrow {
+  font-size: 9px;
+  padding: 0px 2px 3px 0px; }
 
 .left {
   -moz-border-radius-bottomleft: 9px;

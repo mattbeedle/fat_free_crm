@@ -17,6 +17,7 @@
 
 class TasksController < ApplicationController
   before_filter :require_user
+  before_filter :auto_complete, :only => :auto_complete
   before_filter :update_sidebar, :only => :index
   before_filter :set_current_tab, :only => [ :index, :show ]
 
@@ -50,8 +51,8 @@ class TasksController < ApplicationController
   def new
     @view = params[:view] || "pending"
     @task = Task.new
-    @users = User.except(@current_user).all
-    @bucket = Setting.unroll(:task_bucket)[1..-1] << [ "On Specific Date...", :specific_time ]
+    @users = User.except(@current_user).by_name.all
+    @bucket = Setting.unroll(:task_bucket)[1..-1] << [ t(:due_specific_date, :default => 'On Specific Date...'), :specific_time ]
     @category = Setting.unroll(:task_category)
     if params[:related]
       model, id = params[:related].split("_")
@@ -72,8 +73,8 @@ class TasksController < ApplicationController
   def edit
     @view = params[:view] || "pending"
     @task = Task.tracked_by(@current_user).find(params[:id])
-    @users = User.except(@current_user).all
-    @bucket = Setting.unroll(:task_bucket)[1..-1] << [ "On Specific Date...", :specific_time ]
+    @users = User.except(@current_user).by_name.all
+    @bucket = Setting.unroll(:task_bucket)[1..-1] << [ t(:due_specific_date, :default => 'On Specific Date...'), :specific_time ]
     @category = Setting.unroll(:task_category)
     @asset = @task.asset if @task.asset_id?
     if params[:previous] =~ /(\d+)\z/
@@ -184,13 +185,17 @@ class TasksController < ApplicationController
     respond_to_not_found(:js, :xml)
   end
 
+  # POST /tasks/auto_complete/query                                        AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :auto_complete, :only => :auto_complete
+
   # Ajax request to filter out a list of tasks.                            AJAX
   #----------------------------------------------------------------------------
   def filter
     @view = params[:view] || "pending"
 
     update_session do |filters|
-      if params[:checked] == "true"
+      if params[:checked].true?
         filters << params[:filter]
       else
         filters.delete(params[:filter])

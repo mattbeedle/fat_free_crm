@@ -31,9 +31,9 @@ class HomeController < ApplicationController
   # GET /home/options                                                      AJAX
   #----------------------------------------------------------------------------
   def options
-    unless params[:cancel] == "true"
+    unless params[:cancel].true?
       @asset = @current_user.pref[:activity_asset] || "all"
-      @user = @current_user.pref[:activity_user] || "all users"
+      @user = @current_user.pref[:activity_user] || "all_users"
       @duration = @current_user.pref[:activity_duration] || "two_days"
     end
   end
@@ -57,6 +57,22 @@ class HomeController < ApplicationController
     else
       session[params[:id].to_sym] = true
     end
+    render :nothing => true
+  end
+
+  # GET /home/timeline                                                     AJAX
+  #----------------------------------------------------------------------------
+  def timeline
+    unless params[:type].empty?
+      model = params[:type].camelize.constantize
+      item = model.find(params[:id])
+      item.update_attribute(:state, params[:state])
+    else
+      comments, emails = params[:id].split("+")
+      Comment.update_all("state = '#{params[:state]}'", "id IN (#{comments})") unless comments.blank?
+      Email.update_all("state = '#{params[:state]}'", "id IN (#{emails})") unless emails.blank?
+    end
+
     render :nothing => true
   end
 

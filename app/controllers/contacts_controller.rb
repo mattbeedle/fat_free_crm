@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------------------------------
-
 class ContactsController < ApplicationController
   before_filter :require_user
   before_filter :set_current_tab, :only => [ :index, :show ]
+  before_filter :attach, :only => :attach
+  before_filter :discard, :only => :discard
   before_filter :auto_complete, :only => :auto_complete
   after_filter  :update_recently_viewed, :only => :show
 
@@ -41,6 +42,8 @@ class ContactsController < ApplicationController
     @contact = Contact.my(@current_user).find(params[:id])
     @stage = Setting.unroll(:opportunity_stage)
     @comment = Comment.new
+    
+    @timeline = Timeline.find(@contact)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -55,7 +58,7 @@ class ContactsController < ApplicationController
   # GET /contacts/new.xml                                                  AJAX
   #----------------------------------------------------------------------------
   def new
-    @contact  = Contact.new(:user => @current_user)
+    @contact  = Contact.new(:user => @current_user, :access => Setting.default_access)
     @account  = Account.new(:user => @current_user)
     @users    = User.except(@current_user).all
     @accounts = Account.my(@current_user).all(:order => "name")
@@ -163,6 +166,20 @@ class ContactsController < ApplicationController
     respond_to_not_found(:html, :js, :xml)
   end
 
+  # PUT /contacts/1/attach
+  # PUT /contacts/1/attach.xml                                             AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :attach, :only => :attach
+
+  # POST /contacts/1/discard
+  # POST /contacts/1/discard.xml                                           AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :discard, :only => :discard
+
+  # POST /contacts/auto_complete/query                                     AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :auto_complete, :only => :auto_complete
+
   # GET /contacts/search/query                                             AJAX
   #----------------------------------------------------------------------------
   def search
@@ -174,14 +191,10 @@ class ContactsController < ApplicationController
     end
   end
 
-  # POST /contacts/auto_complete/query                                     AJAX
-  #----------------------------------------------------------------------------
-  # Handled by before_filter :auto_complete, :only => :auto_complete
-
   # GET /contacts/options                                                  AJAX
   #----------------------------------------------------------------------------
   def options
-    unless params[:cancel] == "true"
+    unless params[:cancel].true?
       @per_page = @current_user.pref[:contacts_per_page] || Contact.per_page
       @outline  = @current_user.pref[:contacts_outline]  || Contact.outline
       @sort_by  = @current_user.pref[:contacts_sort_by]  || Contact.sort_by

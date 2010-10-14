@@ -18,6 +18,8 @@
 class AccountsController < ApplicationController
   before_filter :require_user
   before_filter :set_current_tab, :only => [ :index, :show ]
+  before_filter :attach, :only => :attach
+  before_filter :discard, :only => :discard
   before_filter :auto_complete, :only => :auto_complete
   after_filter  :update_recently_viewed, :only => :show
 
@@ -41,6 +43,8 @@ class AccountsController < ApplicationController
     @account = Account.my(@current_user).find(params[:id])
     @stage = Setting.unroll(:opportunity_stage)
     @comment = Comment.new
+    
+    @timeline = Timeline.find(@account)
 
     respond_to do |format|
       format.html # show.html.haml
@@ -55,7 +59,7 @@ class AccountsController < ApplicationController
   # GET /accounts/new.xml                                                  AJAX
   #----------------------------------------------------------------------------
   def new
-    @account = Account.new(:user => @current_user)
+    @account = Account.new(:user => @current_user, :access => Setting.default_access)
     @users = User.except(@current_user).all
     if params[:related]
       model, id = params[:related].split("_")
@@ -152,6 +156,16 @@ class AccountsController < ApplicationController
     end
   end
 
+  # PUT /accounts/1/attach
+  # PUT /accounts/1/attach.xml                                             AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :attach, :only => :attach
+
+  # PUT /accounts/1/discard
+  # PUT /accounts/1/discard.xml                                            AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :discard, :only => :discard
+
   # POST /accounts/auto_complete/query                                     AJAX
   #----------------------------------------------------------------------------
   # Handled by before_filter :auto_complete, :only => :auto_complete
@@ -159,7 +173,7 @@ class AccountsController < ApplicationController
   # GET /accounts/options                                                 AJAX
   #----------------------------------------------------------------------------
   def options
-    unless params[:cancel] == "true"
+    unless params[:cancel].true?
       @per_page = @current_user.pref[:accounts_per_page] || Account.per_page
       @outline  = @current_user.pref[:accounts_outline]  || Account.outline
       @sort_by  = @current_user.pref[:accounts_sort_by]  || Account.sort_by

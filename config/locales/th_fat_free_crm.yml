@@ -72,6 +72,7 @@ th:
   due_this_week: "อาทิตย์นี้"
   due_next_week: "อาทิตย์หน้า"
   due_later: "วันหลัง"
+  due_specific_date: On Specific Date... # TODO
 
   completed_today: "วันนี้"
   completed_yesterday: "เมื่อวานนี้"
@@ -185,6 +186,7 @@ th:
   #----------------------------------------------------------------------------
   "option_amount*probability": จำนวนถ่วงน้ำหนัก
   activity_options: แสดง{{models}}ที่เกิดขึ้น โดย{{user}} ในช่วง{{period}}ที่ผ่านมา.
+  all_users: ผู้ใช้ทุกคน
   option_after: หลัง
   option_all: ทั้งหมด
   option_all_users: ผู้ใช้ทุกคน
@@ -324,7 +326,6 @@ th:
 
   # Views -> Contacts.
   #----------------------------------------------------------------------------
-  address: ที่อยู่
   alt_email_small: อื่นๆ
   blog: website/blog
   contact: ที่อยู่ติดต่อ
@@ -341,6 +342,12 @@ th:
   facebook: Facebook
   linked_in: LinkedIn
   myself: ตัวฉัน
+
+  # TODO
+  permissions_intro_private: By default only you will have access to the {{value}}. You can change permissions later.  
+  permissions_intro_public: By default all users will have access to the {{value}}. You can change permissions later.
+  permissions_intro_shared: By default only the selected users will have access to the {{value}}. You can change permissions later.
+
   permissions_intro: เบื้องต้นจะมีเฉพาะคุณเท่านั้นที่เห็น {{value}} แต่สามารถเปลี่ยนได้ในภายหลัง
   referred_by: แนะนำโดย
   referred_by_small: แนะนำโดย
@@ -360,7 +367,12 @@ th:
   create_opp_for_contact: คุณสามารถสร้าง โอกาศปิดการขาย สำหรับ {{value}} ผู้ติดต่อ โดยกำหนดชื่อ สถานะปัจจุบัน คาดการวันปิด โอกาสปิดการขาย มูลค่า และส่วนลด
   lead: ผู้สนใจ
   lead_info_small: ที่อยู่ผู้สนใจ
-  lead_permissions_intro: ในเบื้องต้นสิทธิ์จะถูกนำไปใช้ในแคมเปณ หรือกำหนดเป็นดูได้คนเดียว แต่สามารถเปลี่ยนได้ในภายหลัง
+
+  # TODO
+  lead_permissions_intro_private: By default permissions will be copied from the campaign or set to private. You can change lead permissions later.
+  lead_permissions_intro_public: By default permissions will be copied from the campaign or set to public. You can change lead permissions later.  
+  lead_permissions_intro_shared: By default permissions will be copied from the campaign or shared with the specified users. You can change lead permissions later.  
+
   lead_small: ผู้สนใจ
   lead_status_small: สถานะของผู้สนใจ
   lead_summary: สรุปผู้สนใจ
@@ -422,6 +434,9 @@ th:
   feel_free: กรอกข้อมูลได้เลย
   move_to: ย้ายไป
   no_tasks: "คุณไม่มีภารกิจ{{value}}"
+  no_tasks_pending: pending # TODO
+  no_tasks_assigned: assigned # TODO
+  no_tasks_completed: completed # TODO
   pending_tab: งานค้าง
   pending_tasks: งานคงค้าง
   related: 're:'
@@ -451,6 +466,7 @@ th:
   action_completed: เสร็จสมบูรณ์
   action_created: สร้าง
   action_deleted: ลบ
+  action_email: exchanged emails with # TODO
   action_reassigned: มอบหมายให้คนอื่น
   action_rejected: ยกเลิกแล้ว
   action_rescheduled: ใส่กำหนดการ
@@ -484,9 +500,12 @@ th:
   create_new: สร้าง
   select_existing: select existing # TODO
   delete: ลบ
+  discard: Discard # TODO
   edit: แก้ไข
   items_total: '{{count}} ทั้งหมด'
+  less: Less... # TODO
   me: ฉัน
+  more: More... # TODO
   n_a: N/A
   name: ชื่อ
   no_match: ไม่มี{{value}}ที่ตรงกับ
@@ -497,12 +516,19 @@ th:
   recent_items: เอกสารล่าสุด
   search_assets: ค้นหา{{value}}
   ago: "{{value}}ที่ผ่านมา"
-
+  background_info: หลัง ข้อมูล
+  address: ที่อยู่
+  city: แถบค้าขายของลอนกดอน
+  zipcode: รหัส ไปรษณีย์
+  state: สภาพ
+  country: ประเทศ
+    
   # Views -> Layout.
   #----------------------------------------------------------------------------
   about: เกี่ยวกับ
   about_dev_group: แหล่งสนทนาของนักพัฒนา
   about_features: คุณลักษณะ และข้อผิดพลาด
+  about_ffc: About Fat Free CRM
   about_ffc_resources: Fat Free CRM เพิ่มเติม (กดเพื่อเปิดหน้าใหม่)
   about_ffc_version: Fat Free CRM เวอร์ชัน
   about_home_page: หน้าแรก
@@ -528,6 +554,12 @@ th:
   reset_password: เปลี่ยนรหัสผ่าน
   update_password_and_login: ปรับปรุงรหัสผ่านและเข้าสู่ระบบ
 
+  # Views -> Admin
+  #----------------------------------------------------------------------------
+  # TODO
+  back_to_crm: Back to Fat Free CRM
+  crm_admin_page: Fat Free CRM Administration
+
   # Views -> Admin -> Users.
   #----------------------------------------------------------------------------
   approve: อนุมัติ
@@ -551,6 +583,16 @@ th:
   users: ผู้ใช้
   users_small: ผู้ใช้ # TODO
 
+  # Dropbox.
+  #----------------------------------------------------------------------------
+  dropbox_ack_subject: dropbox - อีเมล์ เพิ่ม - {{subject}}
+  dropbox_ack_intro: สำเร็จ เพิ่ม อีเมล ที่ คุณ ส่ง ไป dropbox
+  dropbox_ack_to: เพิ่ม ลง ใน
+  subject: สาขา วิชา
+  body: ร่างกาย
+
+  # Pluralizations.
+  #----------------------------------------------------------------------------
   pluralize:
     contact:
       one: 'ผู้ติดต่อหนึ่งคน'
@@ -567,3 +609,21 @@ th:
     login:
       one: 'เข้าสู่ระบบหนึ่งครั้ง'
       other: 'เข้าสู่ระบบ {{count}} ครั้ง'
+
+  # Custom date/time formats.
+  #----------------------------------------------------------------------------
+  date:
+    formats:
+      mmddyyyy: "%m/%d/%Y"
+      mmdd: "%b %e"
+      mmddyy: "%b %e, %Y"
+
+  time:
+    formats:
+      mmddhhss: "%b %e at %l:%M%p"
+      
+  calendar_date_select:
+    ok: OK
+    now: Now
+    today: Today
+    clear: Clear

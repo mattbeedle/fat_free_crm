@@ -19,6 +19,8 @@ class LeadsController < ApplicationController
   before_filter :require_user
   before_filter :get_data_for_sidebar, :only => :index
   before_filter :set_current_tab, :only => [ :index, :show ]
+  before_filter :attach, :only => :attach
+  before_filter :discard, :only => :discard
   before_filter :auto_complete, :only => :auto_complete
   after_filter  :update_recently_viewed, :only => :show
 
@@ -42,6 +44,8 @@ class LeadsController < ApplicationController
     @lead = Lead.my(@current_user).find(params[:id])
     @comment = Comment.new
 
+    @timeline = Timeline.find(@lead)
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @lead }
@@ -55,7 +59,7 @@ class LeadsController < ApplicationController
   # GET /leads/new.xml                                                     AJAX
   #----------------------------------------------------------------------------
   def new
-    @lead = Lead.new
+    @lead = Lead.new(:access => Setting.default_access)
     @users = User.except(@current_user).all
     @campaigns = Campaign.my(@current_user).all(:order => "name")
     if params[:related]
@@ -225,6 +229,16 @@ class LeadsController < ApplicationController
     end
   end
 
+  # PUT /leads/1/attach
+  # PUT /leads/1/attach.xml                                                AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :attach, :only => :attach
+
+  # POST /leads/1/discard
+  # POST /leads/1/discard.xml                                              AJAX
+  #----------------------------------------------------------------------------
+  # Handled by before_filter :discard, :only => :discard
+
   # POST /leads/auto_complete/query                                        AJAX
   #----------------------------------------------------------------------------
   # Handled by before_filter :auto_complete, :only => :auto_complete
@@ -232,7 +246,7 @@ class LeadsController < ApplicationController
   # GET /leads/options                                                     AJAX
   #----------------------------------------------------------------------------
   def options
-    unless params[:cancel] == "true"
+    unless params[:cancel].true?
       @per_page = @current_user.pref[:leads_per_page] || Lead.per_page
       @outline  = @current_user.pref[:leads_outline]  || Lead.outline
       @sort_by  = @current_user.pref[:leads_sort_by]  || Lead.sort_by

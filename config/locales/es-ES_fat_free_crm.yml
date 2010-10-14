@@ -77,6 +77,7 @@ es-ES:
   due_this_week: Ésta semana
   due_next_week: Próxima semana
   due_later: En el futuro
+  due_specific_date: En Fecha Específica... # ?!
 
   completed_today: Hoy
   completed_yesterday: Ayer
@@ -190,6 +191,7 @@ es-ES:
   #----------------------------------------------------------------------------
   "option_amount*probability": valor ponderado 
   activity_options: Mostrar {{models}} las actividades realizadas por {{user}} en {{period}}.
+  all_users: todos los usuarios
   option_after: después de
   option_all: todas
   option_all_users: todos los usuarios
@@ -264,7 +266,6 @@ es-ES:
   # Views -> Accounts.
   #----------------------------------------------------------------------------
   account: Cuenta
-  account_permissions_intro: Por defecto sólo usted tendrá acceso a la cuenta. Puede cambiar los permisos más tarde.
   account_small: cuenta
   accounts: Cuentas
   accounts_options: Opciones de Cuenta
@@ -278,6 +279,7 @@ es-ES:
   intro: Puede añadir información de {{value}} más tarde.
   mobile_small: móvil
   open_in_window: Abrir {{value}} en una ventana nueva
+  mail_to: Correo electrónico a {{value}}
   phone_small: teléfono
   phone_toll_free: Llamada gratuita 
   keep_private: Uso privado, no compartir con otros
@@ -329,7 +331,6 @@ es-ES:
     
   # Views -> Contacts.
   #----------------------------------------------------------------------------
-  address: Dirección
   alt_email_small: Otra
   blog: Sitio web/blog
   contact: Contacto
@@ -345,8 +346,10 @@ es-ES:
   extra_info_small: éste contacto 
   facebook: Facebook
   linked_in: LinkedIn
-  myself: Mí 
-  permissions_intro: Por defecto sólo usted tendrá acceso a {{value}}. Puede cambiar los permisos más tarde.
+  myself: Mí
+  permissions_intro_private: Por defecto sólo usted tendrá acceso a {{value}}. Puede cambiar los permisos más tarde.  
+  permissions_intro_public: Por defecto todos los usuarios tendrán acceso a {{value}}. Puede cambiar los permisos más tarde.
+  permissions_intro_shared: Por defecto sólo los usuarios seleccionados tendrán acceso a {{value}}. Puede cambiar los permisos más tarde.  
   referred_by: Referencias
   referred_by_small: referencias
   save_contact: Guardar contacto
@@ -365,7 +368,9 @@ es-ES:
   create_opp_for_contact: De forma opcional puede crear una oportunidad para el contacto {{value}} atribuyéndole un nombre, su estado actual, una fecha de cierre estimada, la probabilidad de ventas, valor de la transacción y descuento ofertado.
   lead: Iniciativa
   lead_info_small: contacto de iniciativa
-  lead_permissions_intro: Por defecto los permisos se copiarán de la campaña o estarán configurados de forma privada. Puede cambiar los permisos de la iniciativa más tarde.
+  lead_permissions_intro_private: Por defecto los permisos se copiarán de la campaña o estarán configurados de forma privada. Puede cambiar los permisos de la iniciativa más tarde.
+  lead_permissions_intro_public: Por defecto los permisos se copiarán de la campaña o estarán configurados de forma pública. Puede cambiar los permisos de la iniciativa más tarde.  
+  lead_permissions_intro_shared: Por defecto los permisos se copiarán de la campaña o estarán compartidos con los usuarios seleccionados. Puede cambiar los permisos de la iniciativa más tarde.  
   lead_small: iniciativa
   lead_status_small: estado de la iniciativa
   lead_summary: Resumen de iniciativas
@@ -427,6 +432,9 @@ es-ES:
   feel_free: Puede
   move_to: mover a
   no_tasks: "No tiene tareas {{value}}"
+  no_tasks_pending: pending # TODO
+  no_tasks_assigned: assigned # TODO
+  no_tasks_completed: completed # TODO
   pending_tab: Pendientes
   pending_tasks: Tareas Pendientes
   related: 're:'
@@ -456,6 +464,7 @@ es-ES:
   action_completed: completó
   action_created: creó
   action_deleted: eliminó
+  action_email: exchanged emails with # TODO
   action_reassigned: reasignó
   action_rejected: rechazó
   action_rescheduled: modificó fecha de finalización de 
@@ -477,6 +486,7 @@ es-ES:
   add_note: Añadir Nota
   save_note: Guardar Nota
   add_note_help: Añadir una nueva nota...
+  edit_note: Editar Nota  
   added_ago: añadida hace {{value}}
   added_by: añadida hace {{time_ago}} por {{user}} 
   back: atrás
@@ -489,9 +499,12 @@ es-ES:
   create_new: Crear
   select_existing: seleccione existentes
   delete: Eliminar
+  discard: Discard # TODO
   edit: Editar
   items_total: 'total {{count}}.'
+  less: Less... # TODO
   me: mí
+  more: More... # TODO
   n_a: N/A
   name: Nombre
   no_match: No coincidencia con {{value}}
@@ -502,12 +515,19 @@ es-ES:
   recent_items: Elementos recientes
   search_assets: Buscar {{value}}
   time_ago: "hace {{value}}"
+  background_info: Información relevante
+  address: Dirección
+  city: Ciudad
+  zipcode: Código postal
+  state: Estado/Región
+  country: País 
 
   # Views -> Layout.
   #----------------------------------------------------------------------------
   about: Sobre
   about_dev_group: Grupo de debate para programadores
   about_features: Funciones y errores
+  about_ffc: Sobre Fat Free CRM
   about_ffc_resources: Recursos de Fat Free CRM (los enlaces se abren en una ventana nueva)
   about_ffc_version: Versión Fat Free CRM
   about_home_page: Página del producto
@@ -533,6 +553,12 @@ es-ES:
   reset_password: Restaurar contraseña
   update_password_and_login: Modificar contraseña y nombre de usuario
 
+  # Views -> Admin
+  #----------------------------------------------------------------------------
+  # TODO
+  back_to_crm: Back to Fat Free CRM
+  crm_admin_page: Fat Free CRM Administration
+
   # Views -> Admin -> Users.
   #----------------------------------------------------------------------------
   approve: Aprobar
@@ -556,6 +582,16 @@ es-ES:
   users: Usuarios
   users_small: usuarios
 
+  # Dropbox.
+  #----------------------------------------------------------------------------
+  dropbox_ack_subject: dropbox - Añadido email - {{subject}}
+  dropbox_ack_intro: Se ha añadido el email que envió al dropbox
+  dropbox_ack_to: Añadido a
+  subject: Asunto
+  body: Cuerpo
+  
+  # Pluralizations.
+  #----------------------------------------------------------------------------
   pluralize:
     contact: 
       one: '1 contacto'
@@ -572,3 +608,21 @@ es-ES:
     login:
       one: '1 conexión'
       other: '{{count}} conexiones'
+
+  # Custom date/time formats.
+  #----------------------------------------------------------------------------
+  date:
+    formats:
+      mmddyyyy: "%m/%d/%Y"
+      mmdd: "%b %e"
+      mmddyy: "%b %e, %Y"
+
+  time:
+    formats:
+      mmddhhss: "%b %e at %l:%M%p"
+
+  calendar_date_select:
+    ok: Cancelar
+    now: Ahora
+    today: Hoy
+    clear: Limpiar

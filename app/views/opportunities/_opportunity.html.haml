@@ -6,7 +6,8 @@
 
   .tools{ invisible, :id => dom_id(opportunity, :tools) }
     = link_to_edit(opportunity) + " | "
-    = link_to_delete(opportunity) + "&nbsp;"
+    = link_to_discard(opportunity) + " | " if shown_on_landing_page?
+    = link_to_delete(opportunity)
 
   .indent
     = link_to(h(opportunity.name), opportunity)
@@ -26,11 +27,11 @@
         - if opportunity.closes_on
           - if won_or_lost
             - if opportunity.closes_on >= Date.today
-              = t(:closing_date, opportunity.closes_on.to_s(:mmddyy))
+              = t(:closing_date, l(opportunity.closes_on, :format => :mmddyy))
             - else
-              = t(:closed_ago_on, :time_ago => distance_of_time_in_words(opportunity.closes_on, Date.today), :date => opportunity.closes_on.to_s(:mmddyy))
+              = t(:closed_ago_on, :time_ago => distance_of_time_in_words(opportunity.closes_on, Date.today), :date => l(opportunity.closes_on, :format => :mmddyy))
           - elsif opportunity.closes_on > Date.today
-            = t(:expected_to_close,  :time => distance_of_time_in_words(Date.today, opportunity.closes_on), :date => opportunity.closes_on.to_s(:mmddyy))
+            = t(:expected_to_close,  :time => distance_of_time_in_words(Date.today, opportunity.closes_on), :date => l(opportunity.closes_on, :format => :mmddyy))
           - elsif opportunity.closes_on == Date.today
             %span.warn= t(:closes_today)
           - else

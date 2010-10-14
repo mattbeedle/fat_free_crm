@@ -16,25 +16,24 @@
 #------------------------------------------------------------------------------
 
 # == Schema Information
-# Schema version: 23
+# Schema version: 27
 #
 # Table name: accounts
 #
-#  id               :integer(4)      not null, primary key
-#  user_id          :integer(4)
-#  assigned_to      :integer(4)
-#  name             :string(64)      default(""), not null
-#  access           :string(8)       default("Private")
-#  website          :string(64)
-#  toll_free_phone  :string(32)
-#  phone            :string(32)
-#  fax              :string(32)
-#  billing_address  :string(255)
-#  shipping_address :string(255)
-#  deleted_at       :datetime
-#  created_at       :datetime
-#  updated_at       :datetime
-#  email            :string(64)
+#  id              :integer(4)      not null, primary key
+#  user_id         :integer(4)
+#  assigned_to     :integer(4)
+#  name            :string(64)      default(""), not null
+#  access          :string(8)       default("Private")
+#  website         :string(64)
+#  toll_free_phone :string(32)
+#  phone           :string(32)
+#  fax             :string(32)
+#  deleted_at      :datetime
+#  created_at      :datetime
+#  updated_at      :datetime
+#  email           :string(64)
+#  background_info :string(255)
 #
 class Account < ActiveRecord::Base
   belongs_to  :user
@@ -45,11 +44,17 @@ class Account < ActiveRecord::Base
   has_many    :opportunities, :through => :account_opportunities, :uniq => true, :order => "opportunities.id DESC"
   has_many    :tasks, :as => :asset, :dependent => :destroy, :order => 'created_at DESC'
   has_many    :activities, :as => :subject, :order => 'created_at DESC'
+  has_one     :billing_address, :dependent => :destroy, :as => :addressable, :class_name => "Address", :conditions => "address_type='Billing'"
+  has_one     :shipping_address, :dependent => :destroy, :as => :addressable, :class_name => "Address", :conditions => "address_type='Shipping'" 
+  has_many    :emails, :as => :mediator
 
+  accepts_nested_attributes_for :billing_address, :allow_destroy => true
+  accepts_nested_attributes_for :shipping_address, :allow_destroy => true
+  
   named_scope :created_by, lambda { |user| { :conditions => ["user_id = ? ", user.id ] } }
   named_scope :assigned_to, lambda { |user| { :conditions => ["assigned_to = ? ", user.id ] } }
 
-  simple_column_search :name, :match => :middle, :escape => lambda { |query| query.gsub(/[^\w\s\-\.']/, "").strip }
+  simple_column_search :name, :email, :match => :middle, :escape => lambda { |query| query.gsub(/[^\w\s\-\.']/, "").strip }
   uses_user_permissions
   acts_as_commentable
   acts_as_paranoid
@@ -70,6 +75,29 @@ class Account < ActiveRecord::Base
     return "" unless self[:billing_address]
     location = self[:billing_address].strip.split("\n").last
     location.gsub(/(^|\s+)\d+(:?\s+|$)/, " ").strip if location
+  end
+
+  # Attach given attachment to the account if it hasn't been attached already.
+  #----------------------------------------------------------------------------
+  def attach!(attachment)
+    unless self.send("#{attachment.class.name.downcase}_ids").include?(attachment.id)
+      if attachment.is_a?(Contact)
+        attachment.account = self
+        [ attachment ]
+      else
+        self.send(attachment.class.name.tableize) << attachment
+      end
+    end
+  end
+
+  # Discard given attachment from the account.
+  #----------------------------------------------------------------------------
+  def discard!(attachment)
+    if attachment.is_a?(Task)
+      attachment.update_attribute(:asset, nil)
+    else # Contacts, Opportunities
+      self.send(attachment.class.name.tableize).delete(attachment)
+    end
   end
 
   # Class methods.

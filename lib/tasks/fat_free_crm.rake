@@ -83,6 +83,7 @@ namespace :crm do
     end
     if proceed
       Rake::Task["db:migrate:reset"].invoke
+      Rake::Task["db:migrate:plugins"].invoke
       Rake::Task["crm:settings:load"].invoke
       Rake::Task["crm:setup:admin"].invoke
     end
@@ -168,6 +169,16 @@ namespace :crm do
             comment.update_attribute(:created_at, time)
             Activity.create(:action => "commented", :created_at => time, :user => comment.user, :subject => subject, :info => info)
           end
+          emails = Email.find(:all, :conditions => [ "mediator_id=? AND mediator_type=?", subject.id, subject.class.name ])
+          emails.each do |email|
+            time = subject.created_at + rand(24 * 60).minutes
+            if time > Time.now
+              time = subject.created_at + rand(600).minutes
+            end
+            sent_at = time - rand(600).minutes
+            received_at = sent_at + rand(600).seconds
+            email.update_attributes(:created_at => time, :sent_at => sent_at, :received_at => received_at)
+          end
         end
         print "." if subject.id % 10 == 0
       end
@@ -181,3 +192,4 @@ namespace :crm do
     end
   end
 end
+

@@ -72,6 +72,7 @@ ru:
   due_this_week: На этой неделе
   due_next_week: На следующей неделе
   due_later: Позже
+  due_specific_date: Конкретная дата
 
   completed_today: Сегодня
   completed_yesterday: Вчера
@@ -184,10 +185,11 @@ ru:
   # Options.
   #----------------------------------------------------------------------------
   "option_amount*probability": взвешенной сумме
-  activity_options: Показывать действия {{models}} произведенные пользователем {{user}} за последние {{period}}.
+  activity_options: "Показывать действия изменившие {{models}} и произведенные {{user}} за последние {{period}}."
+  all_users: Всеми Пользователями
   option_after: после
   option_all: все
-  option_all_users: всеми
+  option_all_users: Всеми Пользователями
   option_amount: сумме
   option_before: до
   option_brief: кратком
@@ -324,7 +326,6 @@ ru:
     
   # Views -> Contacts.
   #----------------------------------------------------------------------------
-  address: Адрес
   alt_email_small: Доп. e-mail
   blog: Блог/Интернет-страница
   contact: Контакт
@@ -341,6 +342,12 @@ ru:
   facebook: Вконтакте
   linked_in: Одноклассники
   myself: Мне
+
+  # TODO
+  permissions_intro_private: By default only you will have access to the {{value}}. You can change permissions later.  
+  permissions_intro_public: By default all users will have access to the {{value}}. You can change permissions later.
+  permissions_intro_shared: By default only the selected users will have access to the {{value}}. You can change permissions later.
+
   permissions_intro: При создании только Вы получаете доступ к {{value}}ам. Права доступа можно изменить в любое время.
   referred_by: По рекомендации
   referred_by_small: по рекомендации
@@ -360,13 +367,18 @@ ru:
   create_opp_for_contact: Вы можете создать возможность, привязанную к контакту &laquo;{{value}}&raquo;, введя в следующих полях название возможности, стадию, предполагаему дату завершения, вероятность продажи, сумма сделки и предлагаемую скидку.
   lead: Потенциальный клиент
   lead_info_small: Контактная информация потенциального клиента
-  lead_permissions_intro: По умолчанию, права доступа будут скопированы от рекламной кампании или установлено "Не показывать никому". Вы сможете изменить права доступа позже.
+
+  # TODO
+  lead_permissions_intro_private: By default permissions will be copied from the campaign or set to private. You can change lead permissions later.
+  lead_permissions_intro_public: By default permissions will be copied from the campaign or set to public. You can change lead permissions later.  
+  lead_permissions_intro_shared: By default permissions will be copied from the campaign or shared with the specified users. You can change lead permissions later.  
+
   lead_small: потенциальный клиент
   lead_status_small: Статус потенциального клиента
   lead_summary: Информация о потенциальном клиенте
   leads: Список потенциальных клиентов
   leads_options: Свойства списка Потенциальных клиентов
-  leads_small: потенциальных клиентов
+  leads_small: потенциальные клиенты
   none: Нет
   rating: Оценка
   reject: Закрыть
@@ -422,6 +434,9 @@ ru:
   feel_free: Можете
   move_to: перенести на
   no_tasks: У вас нет {{value}} заданий
+  no_tasks_pending: незавершенных
+  no_tasks_assigned: порученных
+  no_tasks_completed: завершенных
   pending_tab: На&nbsp;очереди
   pending_tasks: Задания На Очереди
   related: см.
@@ -451,6 +466,7 @@ ru:
   action_completed: завершил(а)
   action_created: добавил(а)
   action_deleted: удалил(а)
+  action_email: exchanged emails with # TODO
   action_reassigned: перепоручил(а)
   action_rejected: закрыл(а)
   action_rescheduled: перенес(ла)
@@ -484,9 +500,12 @@ ru:
   create_new: добавить новый
   select_existing: выбрать существующий
   delete: Удалить
+  discard: Сбросить
   edit: Изменить
   items_total: Всего {{count}}.
+  less: Less... # TODO
   me: я
+  more: More... # TODO
   n_a: -
   name: Название
   no_match: "{{value}} не найдены"
@@ -497,12 +516,19 @@ ru:
   recent_items: Недавние Объекты
   search_assets: Поиск - {{value}}
   ago: "{{value}} назад"
-
+  background_info: Дополнительная информация
+  address: Адрес
+  city: деловой центр Лондона
+  zipcode: почтовый индекс
+  state: режим работы
+  country: страна
+  
   # Views -> Layout.
   #----------------------------------------------------------------------------
   about: О программе
   about_dev_group: Форум для разработчиков
   about_features: Багтрекер
+  about_ffc: О программе Fat Free CRM
   about_ffc_resources: Полезные ресурсы по Fat Free CRM (ссылки открываются в новом окне)
   about_ffc_version: Fat Free CRM версия
   about_home_page: Домашняя страница
@@ -528,6 +554,11 @@ ru:
   reset_password: Изменить Пароль
   update_password_and_login: Изменить Пароль и Войти
 
+  # Views -> Admin
+  #----------------------------------------------------------------------------
+  back_to_crm: Назад к Fat Free CRM
+  crm_admin_page: Администрирование Fat Free CRM
+
   # Views -> Admin -> Users.
   #----------------------------------------------------------------------------
   approve: Подтвердить
@@ -551,6 +582,16 @@ ru:
   users: Пользователи
   users_small: пользователи
 
+  # Dropbox.
+  #----------------------------------------------------------------------------
+  dropbox_ack_subject: dropbox - Добавлено электронной почты - {{subject}}
+  dropbox_ack_intro: Успешно добавлена электронной почты, который направлен Dropbox
+  dropbox_ack_to: В дополнение к
+  subject: Тема
+  body: Тело
+
+  # Pluralizations.
+  #----------------------------------------------------------------------------
   pluralize:
     contact:
       zero: '0 контактов'
@@ -581,3 +622,24 @@ ru:
       few: 'заходил(а) {{count}} раза'
       many: 'заходил(а) {{count}} раз'
       other: 'заходил(а) {{count}} раз'
+
+  # Custom date/time formats.
+  #----------------------------------------------------------------------------
+  date:
+    formats:
+      mmddyyyy: "%m/%d/%Y"
+      mmdd: "%b %e"
+      mmddyy: "%b %e, %Y"
+
+  time:
+    formats:
+      mmddhhss: "%d %B в %H:%M"
+
+  calendar_date_select:
+    ok: OK
+    now: Сейчас
+    today: Сегодня
+    clear: Очистить
+
+  # Default is Finnish (31.12.2009 17:00)
+  calendar_date_select_format: finnish
